@@ -34,8 +34,10 @@ body.incorrect {
     max-width: 80%;
     background-color: #333333ff;
     border-radius: 15%;
-    padding: 15px;
+    padding: 30px;
     box-shadow: 0 0 15px 3px;
+    text-align: center;
+    margin: 15px 0px;
 
 }
 
@@ -44,8 +46,8 @@ body.incorrect {
 }
 .btn-grid {
     display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 10px;
+    grid-template-rows: repeat(2, auto);
+    gap: 15px;
     margin: 20px 0;
 }
 
@@ -81,6 +83,7 @@ body.incorrect {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 20px;
 }
 
 .hide {
