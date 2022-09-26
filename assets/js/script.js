@@ -7,40 +7,66 @@ var questionEL = document.getElementById('question')
 var answerBtnEl = document.getElementById('answer-btn')
 var timerEl = document.getElementById('timer')
 var timeText = document.getElementById("time-left-txt")
+let currentQuestion = null;
+let currentScore = document.getElementById('score')
 let timeCount = document.getElementById("timer-sec")
 let randomQuestion, currentQuestionIndex
-let timeValue = 15;
+let timeValue = 60;
+let score = 0;
+var hasBeenAnswered = false;
 
+// todo: initials box. displaying high score list
 
 //event listeners for start button and next question button with next calling the next random question
-start.addEventListener('click', startgame)
+start.addEventListener('click', startgame);
 next.addEventListener('click', () => {
     currentQuestionIndex++
     nextquestion();
-})
+});
+save.addEventListener('click', onGameSaved);
+
 // hides start button when clicked, picks a random question to start, shows the questions, starts timer
 function startgame() {
     start.classList.add('hide');
     save.classList.add('hide')
-    timeValue = 15;
     randomQuestion = question.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
     questionsEl.classList.remove('hide');
     timerEl.classList.remove('hide')
-    nextquestion();
-    startTimer(timeValue);
-
+    startTimer();
+    nextquestion();   
 }
+
+function onGameSaved() {
+    let scores = localStorage.getItem('scores');
+    scores = JSON.parse(scores);
+    console.log(scores)
+    if (scores === null) {
+        scores = [];
+    }
+    scores.push({
+        initials: readInitials(),
+        score: score 
+    })
+    console.log(scores)
+    localStorage.setItem('scores', JSON.stringify(scores));
+    save.classList.add('hide')
+} 
+
+function readInitials() {
+    return "db"
+}
+
 //calls the next random question
 function nextquestion() {
     reset();
     showQuestion(randomQuestion[currentQuestionIndex]);
+    hasBeenAnswered = false;
 }
-
-
 
 //shows the randomly created question and populates the answer buttons with the corresponding answers
 function showQuestion(question){
+    currentQuestion = question
     questionEL.innerText = question.question
     question.answers.forEach(answers => {
         var button = document.createElement('button');
@@ -52,8 +78,8 @@ function showQuestion(question){
         button.addEventListener('click', answer);
         answerBtnEl.appendChild(button);
     })
-
 }
+
 //removes placeholder buttons and adds appropriate answer buttons for current question
 function reset() {
     next.classList.add('hide');
@@ -62,57 +88,91 @@ function reset() {
     }
 }
 
+function isCorrect(innerText, dataset) {
+    for (var i = 0; i < dataset.answers.length; i++) {
+        if (innerText === dataset.answers[i].text) {
+            return dataset.answers[i].correct
+        }   
+    }
+
+    console.log('isCorrect', innerText, dataset);
+    return undefined;
+}
+
 function answer(a) {
-    var selectAnswer = a.target
-    var correct = selectAnswer.dataset.correct
+    if (hasBeenAnswered) {
+        return;
+    }
+    var selectAnswer = a.target;
+    var correct = isCorrect(selectAnswer.innerText, currentQuestion);
+    console.log(correct)
+    if (correct) {
+        score++;
+        currentScore.innerText = 'Score: ' + score + '/5'
+        console.log(currentScore)
+    } else {
+        timeValue -= 10;
+        updateTimerText();
+    }
     Array.from(answerBtnEl.children).forEach(button => {
         setStatus(button, button.dataset.correct);
     })
     next.classList.remove('hide');
     if (randomQuestion.length > currentQuestionIndex +1) {
-        next.classList.remove('hide');
-    //controls what happens after all questions answered
+        next.classList.remove('hide');    
     } else {
-        next.classList.add('hide')
-        save.classList.remove('hide')
+        //controls what happens after all questions answered
+        questions.classList.add('hide');
+        next.classList.add('hide');
+        save.classList.remove('hide');
+        //initials.classList.remove('hide');
+        timerEl.classList.add('hide');
+        timeText.classList.add('hide');
     }
+    hasBeenAnswered = true;
 }
 
 function setStatus(element, correct) {
-    correctStatus(element)
-    if(correct) {
+    correctStatus(element);
+    if (correct) {
         element.classList.add('correct');
     } else {
         element.classList.add('incorrect');
     } 
-    }
+}
 
 function correctStatus(element) {
     element.classList.remove('correct')
     element.classList.remove('incorrect')
 }
-
-function startTimer(time){
+function updateTimerText() {
+    timeCount.textContent = timeValue
+}
+function startTimer() {
     counter = setInterval(timer, 1000);
-    function timer(){
-        timeCount.textContent = time; 
-        time--; 
-        if(time < 0){ 
+    console.log('startTimer')
+    function timer() {
+        if (isGameOver()) {
+            return;
+        }   
+        console.log('timerexpiry')
+        timeValue--;
+        updateTimerText()
+        if (timeValue <= 0) { 
             clearInterval(counter);
-            save.classList.remove('hide')
-            next.classList.add('hide')
-            questions.classList.add("hide")
-            time-up.classList.remove('hide') 
-        }
-        if (answer != correct) {
-            time--;
+            save.classList.remove('hide');
+            next.classList.add('hide');
+            questions.classList.add("hide");
+            timeUp.classList.remove('hide');
         }
     }
-} 
+}
+
+function isGameOver() {
+    return randomQuestion.length <= currentQuestionIndex +1
+}
+
     
-
-
-
 
 //list of available questions
 var question = [
@@ -125,7 +185,6 @@ var question = [
             {text: 'README', correct: false}
         ]
     }, 
-    
     {
         question: 'Which is a Javascript Datatype',
         answers: [
@@ -145,13 +204,13 @@ var question = [
         ]
     },
     {
-    question: 'the COLOR property in CSS determines what?',
-    answers: [
-        {text: 'Background color', correct: false},
-        {text: 'Text color', correct: true},
-        {text: 'Body Color', correct: false},
-        {text: 'ShadowBox Color', correct: false}
-    ]
+        question: 'the COLOR property in CSS determines what?',
+        answers: [
+            {text: 'Background color', correct: false},
+            {text: 'Text color', correct: true},
+            {text: 'Body Color', correct: false},
+            {text: 'ShadowBox Color', correct: false}
+        ]
     },
     {
         question: 'Which CSS property can alter what the pointer is currently over',
@@ -161,5 +220,5 @@ var question = [
             {text: 'click', correct: false},
             {text: 'hover', correct: true}
         ]
-        },
+    },
 ]
