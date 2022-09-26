@@ -73,7 +73,7 @@ body.incorrect {
     color: white;
 }
 
-#start, #next {
+#start, #next, #save {
     font-size: 1.5rem;
     font-weight: bold;
     padding: 10px 10px;

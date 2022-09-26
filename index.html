@@ -11,6 +11,10 @@
 <body>
     <div class="container">
         <div id="questions" class="hide">
+            <div id="timer" class="hide">
+                <div id="time-left-txt">Time Left</div>
+                <div id="timer-sec">15</div>
+            </div>
             <div id="question">Question</div>
                 <div id="answer-btn" class="btn-grid">
                     <button class="btn">Answer 1</button>
@@ -19,9 +23,11 @@
                     <button class="btn">Answer 4</button>
                 </div>
            </div>
+        <p id="time-up" class="hide">TIME IS UP</p>   
         <div class="buttons">
-            <button id="start" class="start-btn btn">Start</button>
+            <button id="start" class="start-btn btn">Start Quiz!</button>
             <button id="next" class="next-btn btn hide">Next</button>
+            <button id="save" class="save-btn btn hide">Save Score</button>
         </div>
     </div>
     
