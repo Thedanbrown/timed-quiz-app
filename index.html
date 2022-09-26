@@ -9,6 +9,7 @@
     <title>Coding Quiz</title>
 </head>
 <body>
+    <ul id="saved-scores">Previous Scores</ul>
     <div class="container">
         <div id="questions" class="hide">
             <div id="timer" class="hide">
@@ -23,12 +24,17 @@
                     <button class="btn">Answer 4</button>
                 </div>
            </div>
+        <form id="initials" class="hide">
+            <input id="initials-input" type="text" placeholder="Enter Initials" required />
+            <button id="save" class="save-btn btn">Save Score</button>
+        </form>
+          
         <p id="time-up" class="hide">TIME IS UP!</p>
         <p id="score">Score: 0/5</p>   
         <div class="buttons">
             <button id="start" class="start-btn btn">Start Quiz!</button>
             <button id="next" class="next-btn btn hide">Next</button>
-            <button id="save" class="save-btn btn hide">Save Score</button>
+            
         </div>
     </div>
     

@@ -29,13 +29,22 @@ body.incorrect {
     background-color: var(--incorrect);
 }
 
+ul {
+    font-size: 1.2rem;
+    margin-right: 30px;
+    border: solid #333333ff;
+    padding: 15px;
+    border-radius: 10%;
+    box-shadow: 0 0 15px 3px #ea558dff;
+}
+
 .container {
     width: 600px;
     max-width: 80%;
     background-color: #333333ff;
     border-radius: 15%;
     padding: 30px;
-    box-shadow: 0 0 15px 3px;
+    box-shadow: 0 0 15px 3px ;
     text-align: center;
     margin: 15px 0px;
 

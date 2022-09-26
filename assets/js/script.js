@@ -14,7 +14,9 @@ let randomQuestion, currentQuestionIndex
 let timeValue = 60;
 let score = 0;
 var hasBeenAnswered = false;
-
+let initialsEl = document.getElementById("initials");
+let initialsInputEl = document.getElementById("initials-input");
+let scoresList = document.getElementById("saved-scores");
 // todo: initials box. displaying high score list
 
 //event listeners for start button and next question button with next calling the next random question
@@ -28,7 +30,6 @@ save.addEventListener('click', onGameSaved);
 // hides start button when clicked, picks a random question to start, shows the questions, starts timer
 function startgame() {
     start.classList.add('hide');
-    save.classList.add('hide')
     randomQuestion = question.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
     questionsEl.classList.remove('hide');
@@ -50,11 +51,25 @@ function onGameSaved() {
     })
     console.log(scores)
     localStorage.setItem('scores', JSON.stringify(scores));
-    save.classList.add('hide')
+    listBuilder();
+    
+    
 } 
 
+function listBuilder() {
+    const savedScore = document.createElement("li");
+    savedScore.innerHTML = JSON.stringify(scores);
+    scoresList.appendChild(savedScore);
+  };
+
+let scoresTable = JSON.parse(localStorage.getItem("scores"));
+scoresTable.forEach((scores) => {
+    listBuilder(scores);
+});
+
 function readInitials() {
-    return "db"
+    return initialsInputEl.value
+   
 }
 
 //calls the next random question
@@ -124,8 +139,7 @@ function answer(a) {
         //controls what happens after all questions answered
         questions.classList.add('hide');
         next.classList.add('hide');
-        save.classList.remove('hide');
-        //initials.classList.remove('hide');
+        initialsEl.classList.remove('hide');
         timerEl.classList.add('hide');
         timeText.classList.add('hide');
     }
