@@ -17,7 +17,6 @@ var hasBeenAnswered = false;
 let initialsEl = document.getElementById("initials");
 let initialsInputEl = document.getElementById("initials-input");
 let scoresList = document.getElementById("saved-scores");
-// todo: initials box. displaying high score list
 
 //event listeners for start button and next question button with next calling the next random question
 start.addEventListener('click', startgame);
@@ -25,10 +24,12 @@ next.addEventListener('click', () => {
     currentQuestionIndex++
     nextquestion();
 });
+//runs the onGameSaved function when score save is clicked adding score to scoreboard
 save.addEventListener('click', onGameSaved);
 
 // hides start button when clicked, picks a random question to start, shows the questions, starts timer
 function startgame() {
+    alert('The Timer will start immediately. You will lose 10 seconds for each incorrect answer, One point will be added for each correct answer. Enter your initials at the end to save your score!')
     start.classList.add('hide');
     randomQuestion = question.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
@@ -37,39 +38,43 @@ function startgame() {
     startTimer();
     nextquestion();   
 }
-
+//saves the score in local storage and runs the function to update scoreboard
 function onGameSaved() {
     let scores = localStorage.getItem('scores');
     scores = JSON.parse(scores);
-    console.log(scores)
     if (scores === null) {
         scores = [];
     }
     scores.push({
         initials: readInitials(),
         score: score 
-    })
-    console.log(scores)
+    });
     localStorage.setItem('scores', JSON.stringify(scores));
-    listBuilder();
-    
-    
-} 
 
-function listBuilder() {
-    const savedScore = document.createElement("li");
-    savedScore.innerHTML = JSON.stringify(scores);
-    scoresList.appendChild(savedScore);
-  };
+    displaySaveTable();
+}
 
-let scoresTable = JSON.parse(localStorage.getItem("scores"));
-scoresTable.forEach((scores) => {
-    listBuilder(scores);
-});
+function displaySaveTable() {
+    const scores = localStorage.getItem("scores")
+    let scoresTable = [];
+    if (scores !== null) {
+        scoresTable = JSON.parse(scores);
+    }
+    const tableHeader = document.createElement('li')
+    tableHeader.innerHTML = "Initials: Score";
+    scoresList.appendChild(tableHeader);
+    scoresTable.forEach((scores) => {
+        const savedScore = document.createElement("li");
+        savedScore.innerHTML = scores.initials + ": " + scores.score;
+        scoresList.appendChild(savedScore);
+    });
+}
+
+//this is updating the table on initilization
+displaySaveTable();
 
 function readInitials() {
     return initialsInputEl.value
-   
 }
 
 //calls the next random question
@@ -113,18 +118,16 @@ function isCorrect(innerText, dataset) {
     console.log('isCorrect', innerText, dataset);
     return undefined;
 }
-
+//determines if an answer is correct, updates score. subtracts from score if inccorect
 function answer(a) {
     if (hasBeenAnswered) {
         return;
     }
     var selectAnswer = a.target;
     var correct = isCorrect(selectAnswer.innerText, currentQuestion);
-    console.log(correct)
     if (correct) {
         score++;
         currentScore.innerText = 'Score: ' + score + '/5'
-        console.log(currentScore)
     } else {
         timeValue -= 10;
         updateTimerText();
@@ -164,12 +167,10 @@ function updateTimerText() {
 }
 function startTimer() {
     counter = setInterval(timer, 1000);
-    console.log('startTimer')
     function timer() {
         if (isGameOver()) {
             return;
-        }   
-        console.log('timerexpiry')
+        }
         timeValue--;
         updateTimerText()
         if (timeValue <= 0) { 
