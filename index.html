@@ -9,7 +9,9 @@
     <title>Coding Quiz</title>
 </head>
 <body>
+    <!--this UL gets populated with scores saved to local storage-->
     <ul id="saved-scores">Previous Scores:</ul>
+    <!--container for the quiz elements-->
     <div class="container">
         <div id="questions" class="hide">
             <div id="timer" class="hide">
@@ -24,6 +26,7 @@
                     <button class="btn">Answer 4</button>
                 </div>
            </div>
+           <!--form where initials can be input to save score-->
         <form id="initials" class="hide">
             <input id="initials-input" type="text" placeholder="Enter Initials" required />
             <button id="save" class="save-btn btn">Save Score</button>

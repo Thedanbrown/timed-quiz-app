@@ -9,6 +9,7 @@
     --incorrect: red;
     --button-color: #ea558dff;
 }
+
 body {
     background-color: var(--normal-background);
     padding: 0;
