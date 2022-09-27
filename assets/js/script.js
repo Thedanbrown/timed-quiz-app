@@ -61,11 +61,11 @@ function displaySaveTable() {
         scoresTable = JSON.parse(scores);
     }
     const tableHeader = document.createElement('li')
-    tableHeader.innerHTML = "Initials: Score";
+    tableHeader.innerHTML = "Initials  :  Score";
     scoresList.appendChild(tableHeader);
     scoresTable.forEach((scores) => {
         const savedScore = document.createElement("li");
-        savedScore.innerHTML = scores.initials + ": " + scores.score;
+        savedScore.innerHTML = scores.initials + "  :  " + scores.score;
         scoresList.appendChild(savedScore);
     });
 }
